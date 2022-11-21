@@ -19,36 +19,39 @@ const resolvers = {
         login: async (parent, { email, password }) => {
             const user = await User.findOne({ email })//based off what?
 
-            const corrPass = await user.isCorrectPass(password)
+            const corrPass = await user.isCorrectPassword(password)
             if (!user || !corrPass) {
                 throw new AuthenticationError("Incorrect credentials")
             }
             const token = signToken(user)
             return { token, user }
         },
-        saveBook: async (parent, { userId, book }, context) => {
+        saveBook: async (parent, { bookData }, context) => {
             if (context.user) {
-                const saveBook = await User.findByIdAndUpdate(
-                    { _id: context.userId },
-                    { $addToSet: { savedBooks: book } },
+                const updatedUser = await User.findByIdAndUpdate(
+                    { _id: context.user._id },
+                    { $push: { savedBooks: bookData } },
                     { new: true }
                 );
-                return saveBook
-            }
-            throw new AuthenticationError("you're not logged in")
 
+                return updatedUser;
+            }
+
+            throw new AuthenticationError('You need to be logged in!');
         },
-        removeBook: async (parent, { book }, context) => {
+        removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
-                const bookData = await User.findByIdAndUpdate(
+                const updatedUser = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { savedBooks: book } }
-                )
+                    { $pull: { savedBooks: { bookId } } },
+                    { new: true }
+                );
 
+                return updatedUser;
             }
-            throw new AuthenticationError("you're not logged in")
 
-        }
+            throw new AuthenticationError('You need to be logged in!');
+        },
     }
 }
 

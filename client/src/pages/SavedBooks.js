@@ -52,15 +52,8 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook({
-        variables: { bookId: bookId },
-        update: cache => {
-          const userData = cache.readQuery({ query: GET_ME }).me
-          const userSavedBooks = userData.savedBooks;
-          const updatedBooks = userSavedBooks.filter((book) => book.bookId !== bookId)
-          userData.savedBooks = updatedBooks;
-          cache.writeQuery({ query: GET_ME, data: { userData: { ...userData.savedBooks } } })
-        }
+      const { data } = await deleteBook({
+        variables: { bookId }
       })
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
