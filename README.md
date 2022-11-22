@@ -1,7 +1,7 @@
 # book-search-engine-mern 
 
 ## Description
-This site allows users to look up their favorite books and save it to a list. 
+This site allows users to look up their favorite books using the GoogleBooks API and save it to a list. 
 
 ## Installation
 N/A
@@ -16,4 +16,4 @@ N/A
 N/A
 
 ## Link to Deployed Page
-[Link to Site]()
+[Link to Site](https://charlee-book-search.herokuapp.com/)
